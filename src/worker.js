@@ -8,7 +8,9 @@ import { parseSerif } from './engine/serif.js';
 import PlayfairUrl from './fonts/Playfair.ttf?url';
 import CormorantUrl from './fonts/Cormorant.ttf?url';
 import GaramondUrl from './fonts/Garamond.ttf?url';
-const URLS = { Playfair: PlayfairUrl, Cormorant: CormorantUrl, Garamond: GaramondUrl };
+import BodoniUrl from './fonts/Bodoni.ttf?url';
+import ItalicUrl from './fonts/Italic.ttf?url';
+const URLS = { Playfair: PlayfairUrl, Cormorant: CormorantUrl, Garamond: GaramondUrl, Bodoni: BodoniUrl, Italic: ItalicUrl };
 const cache = {};
 
 async function getSerif(base) {

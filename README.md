@@ -19,10 +19,12 @@ faces of studios like [h-4.digital](https://h-4.digital/product-category/fonts/)
 - **Two kinds of base letterforms:**
   - a built-in **monoline skeleton** (drawn in code) that you ink to any weight,
     with taper / contrast / caps; and
-  - **real open-source serifs** (Playfair Display, Cormorant Garamond, EB
-    Garamond) whose actual outlines are warped — so **liquifying a high-contrast
-    serif** gives the flowing, melting, calligraphic display look of studios
-    like [h-4.digital](https://h-4.digital/product-category/fonts/).
+  - **real open-source serifs** — Playfair Display, Cormorant Garamond, EB
+    Garamond, **Bodoni Moda** (super-high-contrast Didone) and **Cormorant
+    Italic** (calligraphic) — whose actual outlines are warped. **Liquifying a
+    high-contrast or italic serif** gives the thin, flowing, abstract
+    calligraphic display look of studios like
+    [h-4.digital](https://h-4.digital/product-category/fonts/).
 - **Live preview = the exported file.** The on-screen specimen is rendered with
   the exact `@font-face` you download — no surprises after installing.
 - **Parametric & experimental controls:** weight, width, slant, a **broad-nib
@@ -33,10 +35,11 @@ faces of studios like [h-4.digital](https://h-4.digital/product-category/fonts/)
   (including reverse contrast), facet/smoothness, sine **waves**, flowing
   **noise warp**, **jitter/roughen**, **pixelate**, per-glyph **rotation**,
   and **echo/ghost** repeats — all seeded for reproducibility.
-- **28 presets** — sharp broad-nib looks (Sigil, Blade, Kimera, Aether, Aon,
-  Talon, Fang, Occult, Gothic, Thorn, Quill), serif-warp looks (Serif, Molten,
-  Ribbon, Relic, Wraith) and distortion looks (Liquid, Wave, Melt, Glitch,
-  Shatter, Pixel, Brutal, Wire, Ghost, Ink, Reverse) — plus **Randomize**.
+- **33 presets** — sharp broad-nib looks (Sigil, Blade, Kimera, Aether, Aon,
+  Talon, Fang, Occult, Gothic, Thorn, Quill), serif-warp & abstract-calligraphic
+  looks (Serif, Molten, Ribbon, Relic, Wraith, Hairline, Grimoire, Agonia,
+  Seraph, Vellum) and distortion looks (Liquid, Wave, Melt, Glitch, Shatter,
+  Pixel, Brutal, Wire, Ghost, Ink, Reverse) — plus **Randomize**.
 - **Custom naming** — the family & style names you type are baked into the OTF
   name table, so the font installs and appears under that name in your apps.
 - **One-click OTF export**, generated entirely in the browser (no server, no
@@ -109,8 +112,9 @@ The serif bases are bundled (subset to Latin) under the **SIL Open Font License
 1.1** — see the `.OFL.txt` files in `src/fonts/`:
 
 - **Playfair Display** — © 2017 The Playfair Display Project Authors
-- **Cormorant Garamond** — © 2015 The Cormorant Project Authors
+- **Cormorant Garamond** (roman & italic) — © 2015 The Cormorant Project Authors
 - **EB Garamond** — © 2017 The EB Garamond Project Authors
+- **Bodoni Moda** — © 2020 The Bodoni Moda Project Authors
 
 A font you export from a serif base is a *derivative* of that OFL font, so it
 inherits the OFL (free to use, embed, modify and share — just don't ship it

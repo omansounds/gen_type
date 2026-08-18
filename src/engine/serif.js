@@ -7,10 +7,11 @@
 // re-stroked.
 //
 // Bundled fonts (subset to Latin, SIL Open Font License):
-//   Playfair Display · Cormorant Garamond · EB Garamond
+//   Playfair Display · Cormorant Garamond · EB Garamond ·
+//   Bodoni Moda (super-high-contrast Didone) · Cormorant Italic (calligraphic)
 import { parse } from 'opentype.js/dist/opentype.mjs';
 
-export const SERIFS = ['Playfair', 'Cormorant', 'Garamond'];
+export const SERIFS = ['Playfair', 'Cormorant', 'Garamond', 'Bodoni', 'Italic'];
 
 export function parseSerif(arrayBuffer) {
   const font = parse(arrayBuffer);
@@ -36,10 +37,12 @@ function flattenCubic(out, x0, y0, c1x, c1y, c2x, c2y, x1, y1, n) {
   }
 }
 
-// Extract a glyph's outline as flattened contours (font units, y-up, baseline 0).
+// Extract a glyph's outline as flattened contours, normalised to a 1000-unit em
+// (fonts like Bodoni Moda use 2048/2000, so we rescale to match the engine).
 export function serifContours(font, ch) {
   const g = font.charToGlyph(ch);
   if (!g) return { contours: [], adv: 600 };
+  const s = 1000 / (font.unitsPerEm || 1000);
   const cmds = g.path.commands;
   const contours = [];
   let cur = null;
@@ -72,5 +75,8 @@ export function serifContours(font, ch) {
     }
   }
   if (cur && cur.length > 1) contours.push(cur);
-  return { contours, adv: g.advanceWidth || 600 };
+  if (s !== 1) {
+    for (const c of contours) for (const p of c) { p[0] *= s; p[1] *= s; }
+  }
+  return { contours, adv: (g.advanceWidth || 600) * s };
 }

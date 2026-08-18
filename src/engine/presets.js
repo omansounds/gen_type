@@ -107,6 +107,12 @@ export const PRESETS = {
   Ribbon: { base: 'Playfair', liquify: 96, waveAmp: 40, waveFreq: 0.012, detail: 14 },
   Relic: { base: 'Garamond', liquify: 60, jitterAmp: 10, noiseAmp: 18, noiseScale: 0.01, detail: 18 },
   Wraith: { base: 'Cormorant', liquify: 196, waveAmp: 22, waveFreq: 0.016, detail: 12 },
+  // ---- super-high-contrast hairline serifs, warped (abstract calligraphic) ----
+  Hairline: { base: 'Bodoni', liquify: 30, detail: 16 },
+  Grimoire: { base: 'Bodoni', liquify: 96, noiseScale: 0.006, detail: 13 },
+  Agonia: { base: 'Bodoni', liquify: 158, waveAmp: 14, waveFreq: 0.014, detail: 11 },
+  Seraph: { base: 'Italic', liquify: 66, waveAmp: 16, waveFreq: 0.012, detail: 14 },
+  Vellum: { base: 'Italic', liquify: 120, detail: 12 },
   Liquid: { weight: 92, waveAmp: 46, waveFreq: 0.014, waveAxis: 'both', noiseAmp: 30, noiseScale: 0.006, detail: 18 },
   Wave: { weight: 54, waveAmp: 74, waveFreq: 0.02, waveAxis: 'x', detail: 16 },
   Melt: { weight: 84, waveAmp: 32, waveAxis: 'y', waveFreq: 0.02, noiseAmp: 44, noiseScale: 0.012, detail: 16 },

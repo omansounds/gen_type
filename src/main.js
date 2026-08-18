@@ -119,7 +119,10 @@ function setActivePreset(name) {
 setActivePreset('Clean');
 
 // base letterforms
-const BASES = [['skeleton', 'Skeleton'], ['Playfair', 'Playfair'], ['Cormorant', 'Cormorant'], ['Garamond', 'Garamond']];
+const BASES = [
+  ['skeleton', 'Skeleton'], ['Playfair', 'Playfair'], ['Cormorant', 'Cormorant'],
+  ['Garamond', 'Garamond'], ['Bodoni', 'Bodoni'], ['Italic', 'Italic'],
+];
 const basesEl = document.getElementById('bases');
 for (const [val, label] of BASES) {
   const b = document.createElement('button');
