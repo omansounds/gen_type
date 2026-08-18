@@ -4,10 +4,17 @@
 import { chromium } from 'playwright-core';
 import fs from 'node:fs';
 import { buildFont } from '../src/engine/buildFont.js';
+import { parseSerif } from '../src/engine/serif.js';
 import { withPreset } from '../src/engine/presets.js';
 
 const preset = process.argv[2] || 'Sigil';
-const font = buildFont(withPreset(preset), { family: 'GenTypeTest', style: 'Regular' });
+const params = withPreset(preset);
+let serif = null;
+if (params.base && params.base !== 'skeleton') {
+  const buf = fs.readFileSync(new URL(`../src/fonts/${params.base}.ttf`, import.meta.url));
+  serif = parseSerif(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength));
+}
+const font = buildFont(params, { family: 'GenTypeTest', style: 'Regular' }, serif);
 const b64 = Buffer.from(new Uint8Array(font.toArrayBuffer())).toString('base64');
 
 const html = `<!doctype html><html><head><style>

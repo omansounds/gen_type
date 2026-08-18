@@ -105,6 +105,7 @@ for (const name of Object.keys(PRESETS)) {
     state.params = withPreset(name);
     syncControls(state.params);
     setActivePreset(name);
+    setActiveBase(state.params.base);
     requestBuild();
   });
   els.presets.appendChild(b);
@@ -116,6 +117,22 @@ function setActivePreset(name) {
   );
 }
 setActivePreset('Clean');
+
+// base letterforms
+const BASES = [['skeleton', 'Skeleton'], ['Playfair', 'Playfair'], ['Cormorant', 'Cormorant'], ['Garamond', 'Garamond']];
+const basesEl = document.getElementById('bases');
+for (const [val, label] of BASES) {
+  const b = document.createElement('button');
+  b.className = 'preset';
+  b.textContent = label;
+  b.dataset.base = val;
+  b.addEventListener('click', () => { state.params.base = val; setActiveBase(val); requestBuild(); });
+  basesEl.appendChild(b);
+}
+function setActiveBase(val) {
+  basesEl.querySelectorAll('.preset').forEach((el) => el.classList.toggle('active', el.dataset.base === val));
+}
+setActiveBase('skeleton');
 
 // glyph grid
 const gridChars = Object.keys(GLYPHS).filter((c) => c !== ' ');
@@ -172,12 +189,18 @@ els.style.addEventListener('input', () => { state.style = els.style.value || 'Re
 els.random.addEventListener('click', () => {
   const p = { ...DEFAULTS };
   const rnd = (a, b) => a + Math.random() * (b - a);
+  const serifBase = Math.random() < 0.4;
+  if (serifBase) {
+    p.base = ['Playfair', 'Cormorant', 'Garamond'][Math.floor(Math.random() * 3)];
+    p.liquify = Math.round(rnd(40, 190));
+    p.detail = Math.round(rnd(12, 24));
+  }
   p.weight = Math.round(rnd(24, 190));
   p.width = +rnd(0.7, 1.5).toFixed(2);
   p.slant = Math.round(rnd(-14, 14));
-  p.detail = Math.round(rnd(12, 90));
+  if (!serifBase) p.detail = Math.round(rnd(12, 90));
   p.cap = ['round', 'butt', 'square'][Math.floor(Math.random() * 3)];
-  const tapered = Math.random() < 0.55;
+  const tapered = !serifBase && Math.random() < 0.55;
   if (tapered) { p.taper = +rnd(0.4, 1).toFixed(2); p.taperSharp = +rnd(0.4, 2.6).toFixed(1); p.taperBias = +rnd(-0.7, 0.7).toFixed(2); p.cap = 'butt'; }
   if (Math.random() < 0.5) { p.contrast = +rnd(0.3, 0.8).toFixed(2); p.contrastAngle = [0, 0, 90][Math.floor(Math.random() * 3)]; }
   if (Math.random() < 0.5) { p.waveAmp = Math.round(rnd(20, 90)); p.waveFreq = +rnd(0.008, 0.025).toFixed(3); p.waveAxis = ['x', 'y', 'both'][Math.floor(Math.random() * 3)]; }
@@ -189,6 +212,7 @@ els.random.addEventListener('click', () => {
   state.params = p;
   syncControls(p);
   setActivePreset(null);
+  setActiveBase(p.base);
   requestBuild();
 });
 

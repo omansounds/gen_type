@@ -16,6 +16,13 @@ faces of studios like [h-4.digital](https://h-4.digital/product-category/fonts/)
 
 - **Full character set** — A–Z, a–z, 0–9 and a wide range of punctuation &
   symbols (101 glyphs), so the fonts are actually usable for real text.
+- **Two kinds of base letterforms:**
+  - a built-in **monoline skeleton** (drawn in code) that you ink to any weight,
+    with taper / contrast / caps; and
+  - **real open-source serifs** (Playfair Display, Cormorant Garamond, EB
+    Garamond) whose actual outlines are warped — so **liquifying a high-contrast
+    serif** gives the flowing, melting, calligraphic display look of studios
+    like [h-4.digital](https://h-4.digital/product-category/fonts/).
 - **Live preview = the exported file.** The on-screen specimen is rendered with
   the exact `@font-face` you download — no surprises after installing.
 - **Parametric & experimental controls:** weight, width, slant,
@@ -24,9 +31,10 @@ faces of studios like [h-4.digital](https://h-4.digital/product-category/fonts/)
   (including reverse contrast), facet/smoothness, sine **waves**, flowing
   **noise warp**, **jitter/roughen**, **pixelate**, per-glyph **rotation**,
   and **echo/ghost** repeats — all seeded for reproducibility.
-- **19 presets** — occult / display looks (Sigil, Blade, Fang, Occult, Gothic,
-  Thorn, Quill) and distortion looks (Liquid, Wave, Melt, Glitch, Shatter,
-  Pixel, Brutal, Wire, Ghost, Ink, Reverse) — plus a **Randomize** button.
+- **24 presets** — serif-warp looks (Serif, Molten, Ribbon, Relic, Wraith),
+  occult / display looks (Sigil, Blade, Fang, Occult, Gothic, Thorn, Quill) and
+  distortion looks (Liquid, Wave, Melt, Glitch, Shatter, Pixel, Brutal, Wire,
+  Ghost, Ink, Reverse) — plus a **Randomize** button.
 - **Custom naming** — the family & style names you type are baked into the OTF
   name table, so the font installs and appears under that name in your apps.
 - **One-click OTF export**, generated entirely in the browser (no server, no
@@ -62,10 +70,11 @@ to GitHub Pages, Netlify, Vercel, or any static host (asset paths are relative).
 ```
 src/engine/
   geometry.js   arcs, ellipses, béziers, arc-length resampling, winding helpers
-  glyphs.js     every glyph as monoline centrelines (+ solid fills for dots)
+  glyphs.js     every skeleton glyph as monoline centrelines (+ dot fills)
   stroke.js     centreline → filled outline (per-vertex width: taper, contrast,
                 mitred joins, caps, hollow rings)
-  effects.js    glyph-local distortions (wave / noise / jitter / pixelate / …)
+  serif.js      pull real outlines from a bundled OFL serif (the other base)
+  effects.js    glyph-local distortions (liquify / wave / noise / jitter / …)
   presets.js    control schema + named looks
   buildFont.js  params → real opentype.js Font (preview and export)
 src/
@@ -89,6 +98,21 @@ Font files are written with [opentype.js](https://github.com/opentypejs/opentype
 Any modern browser (Chrome, Edge, Firefox, Safari). Uses ES modules, Web
 Workers, the CSS Font Loading API, and Blob downloads.
 
-## License
+## Fonts & licensing
 
-Code: MIT. Fonts you generate are yours.
+The **Skeleton** base is drawn from scratch in this repo — fonts you export from
+it are entirely your own.
+
+The serif bases are bundled (subset to Latin) under the **SIL Open Font License
+1.1** — see the `.OFL.txt` files in `src/fonts/`:
+
+- **Playfair Display** — © 2017 The Playfair Display Project Authors
+- **Cormorant Garamond** — © 2015 The Cormorant Project Authors
+- **EB Garamond** — © 2017 The EB Garamond Project Authors
+
+A font you export from a serif base is a *derivative* of that OFL font, so it
+inherits the OFL (free to use, embed, modify and share — just don't ship it
+under the original reserved names like "Playfair Display"). Pick your own family
+name before exporting, which the tool bakes into the file.
+
+Application code: MIT.

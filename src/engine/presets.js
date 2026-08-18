@@ -3,6 +3,7 @@
 // ready-made experimental looks.
 
 export const DEFAULTS = {
+  base: 'skeleton', // 'skeleton' | 'Playfair' | 'Cormorant' | 'Garamond'
   weight: 66,
   width: 1,
   slant: 0,
@@ -16,6 +17,7 @@ export const DEFAULTS = {
   waveAmp: 0,
   waveFreq: 0.012,
   waveAxis: 'x',
+  liquify: 0,
   noiseAmp: 0,
   noiseScale: 0.008,
   jitterAmp: 0,
@@ -53,6 +55,7 @@ export const SCHEMA = [
   {
     group: 'Distortion',
     controls: [
+      { key: 'liquify', label: 'Liquify (melt / flow)', min: 0, max: 240, step: 1 },
       { key: 'waveAmp', label: 'Wave amount', min: 0, max: 160, step: 1 },
       { key: 'waveFreq', label: 'Wave frequency', min: 0.002, max: 0.03, step: 0.001 },
       { key: 'waveAxis', label: 'Wave axis', kind: 'select', options: ['x', 'y', 'both'] },
@@ -87,6 +90,12 @@ export const PRESETS = {
   Gothic: { weight: 158, taper: 0.5, taperSharp: 2, contrast: 0.8, width: 0.8, cap: 'butt', detail: 40 },
   Thorn: { weight: 40, taper: 0.96, taperSharp: 0.45, contrast: 0.35, waveAmp: 14, waveFreq: 0.02, detail: 34, cap: 'butt' },
   Quill: { weight: 88, taper: 0.72, taperSharp: 1.4, taperBias: 0.6, contrast: 0.6, slant: 9, cap: 'butt', detail: 26 },
+  // ---- serif-outline base (warped real serifs — the flowing display look) ----
+  Serif: { base: 'Playfair', detail: 20 },
+  Molten: { base: 'Cormorant', liquify: 132, noiseScale: 0.006, detail: 14 },
+  Ribbon: { base: 'Playfair', liquify: 96, waveAmp: 40, waveFreq: 0.012, detail: 14 },
+  Relic: { base: 'Garamond', liquify: 60, jitterAmp: 10, noiseAmp: 18, noiseScale: 0.01, detail: 18 },
+  Wraith: { base: 'Cormorant', liquify: 196, waveAmp: 22, waveFreq: 0.016, detail: 12 },
   Liquid: { weight: 92, waveAmp: 46, waveFreq: 0.014, waveAxis: 'both', noiseAmp: 30, noiseScale: 0.006, detail: 18 },
   Wave: { weight: 54, waveAmp: 74, waveFreq: 0.02, waveAxis: 'x', detail: 16 },
   Melt: { weight: 84, waveAmp: 32, waveAxis: 'y', waveFreq: 0.02, noiseAmp: 44, noiseScale: 0.012, detail: 16 },

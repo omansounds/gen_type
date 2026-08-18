@@ -40,6 +40,21 @@ function valueNoise(x, y, seed) {
   return (v00 * (1 - u) + v10 * u) * (1 - v) + (v01 * (1 - u) + v11 * u) * v;
 }
 
+// Fractal (multi-octave) noise in ~[0,1] — richer, flowing domain warp.
+function fbm(x, y, seed) {
+  let sum = 0;
+  let amp = 1;
+  let freq = 1;
+  let norm = 0;
+  for (let o = 0; o < 3; o++) {
+    sum += amp * valueNoise(x * freq, y * freq, seed + o * 1013);
+    norm += amp;
+    amp *= 0.5;
+    freq *= 2.03;
+  }
+  return sum / norm;
+}
+
 export function glyphSeed(globalSeed, code) {
   return (Math.imul(globalSeed >>> 0, 2654435761) ^ Math.imul(code, 40503)) >>> 0;
 }
@@ -79,6 +94,13 @@ export function applyEffects(strokes, p, ctx) {
       const s = p.noiseScale;
       x += (valueNoise(x * s, y * s, seed) - 0.5) * 2 * p.noiseAmp;
       y += (valueNoise(x * s + 31.7, y * s - 12.3, seed ^ 0x9e37) - 0.5) * 2 * p.noiseAmp;
+    }
+
+    // 3b. liquify — strong low-frequency fractal domain warp (melting ribbons)
+    if (p.liquify > 0) {
+      const s = p.noiseScale * 0.6;
+      x += (fbm(x * s, y * s, seed + 7) - 0.5) * 2 * p.liquify;
+      y += (fbm(x * s + 57.3, y * s + 19.1, seed + 91) - 0.5) * 2 * p.liquify;
     }
 
     // 4. jitter — high-frequency per-point break-up (position-hashed)

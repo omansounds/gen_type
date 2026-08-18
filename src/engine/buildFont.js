@@ -9,16 +9,39 @@ import { Font, Glyph, Path } from 'opentype.js/dist/opentype.mjs';
 import { GLYPHS, METRICS, unicodeFor } from './glyphs.js';
 import { applyEffects } from './effects.js';
 import { strokeCenterline } from './stroke.js';
+import { serifContours } from './serif.js';
 import { orient } from './geometry.js';
 
+// Echo / ghost: repeat the whole outline at an offset (translation keeps winding).
+function applyEcho(contours, p) {
+  const echo = Math.max(1, Math.round(p.echo || 1));
+  if (echo <= 1) return contours;
+  const out = [];
+  for (let k = echo - 1; k >= 0; k--) {
+    const ox = k * p.echoX;
+    const oy = k * p.echoY;
+    for (const c of contours) out.push(c.map(([x, y]) => [x + ox, y + oy]));
+  }
+  return out;
+}
+
 // Build the filled outline contours for one character at the given params.
-export function glyphContours(ch, p) {
+// `serifFont` (optional) supplies real serif outlines when p.base is a serif.
+export function glyphContours(ch, p, serifFont) {
+  const code = unicodeFor(ch);
+
+  // --- Serif base: warp the real outlines (no stroking, winding preserved) ---
+  if (p.base && p.base !== 'skeleton' && serifFont) {
+    const { contours, adv } = serifContours(serifFont, ch);
+    if (!contours.length) return { contours: [], adv };
+    const ctx = { adv, code, cx: adv / 2, cy: 300 };
+    return { contours: applyEcho(applyEffects(contours, p, ctx), p), adv, serif: true };
+  }
+
+  // --- Skeleton base: ink the monoline centerlines ---
   const def = GLYPHS[ch];
   if (!def) return { contours: [], adv: 560 };
-  const code = unicodeFor(ch);
-  const cx = def.adv / 2;
-  const ctx = { adv: def.adv, code, cx, cy: 300 };
-
+  const ctx = { adv: def.adv, code, cx: def.adv / 2, cy: 300 };
   const strokeOpt = {
     contrast: p.contrast,
     contrastAngle: p.contrastAngle,
@@ -28,27 +51,12 @@ export function glyphContours(ch, p) {
     taperSharp: p.taperSharp || 1.2,
     taperBias: p.taperBias || 0,
   };
-
   let contours = [];
-  // Distort + stroke the monoline centerlines (stroker sets correct winding).
   for (const distorted of applyEffects(def.s || [], p, ctx)) {
     for (const c of strokeCenterline(distorted, p.weight, strokeOpt)) contours.push(c);
   }
-  // Distort solid fills (dots etc.) — force CCW so they read as ink.
   if (def.f) for (const poly of applyEffects(def.f, p, ctx)) contours.push(orient(poly, true));
-
-  // Echo / ghost: repeat the whole outline at an offset (translation keeps winding).
-  const echo = Math.max(1, Math.round(p.echo || 1));
-  if (echo > 1) {
-    const base = contours;
-    contours = [];
-    for (let k = echo - 1; k >= 0; k--) {
-      const ox = k * p.echoX;
-      const oy = k * p.echoY;
-      for (const c of base) contours.push(c.map(([x, y]) => [x + ox, y + oy]));
-    }
-  }
-  return { contours, adv: def.adv };
+  return { contours: applyEcho(contours, p), adv: def.adv };
 }
 
 function contoursToPath(contours) {
@@ -62,17 +70,21 @@ function contoursToPath(contours) {
   return path;
 }
 
-export function buildFont(params, meta = {}) {
+export function buildFont(params, meta = {}, serifFont = null) {
   const p = params;
   const family = meta.family || 'Gen Type';
   const style = meta.style || 'Regular';
+  const isSerif = p.base && p.base !== 'skeleton' && serifFont;
 
   const notdef = new Glyph({ name: '.notdef', unicode: 0, advanceWidth: 400, path: new Path() });
   const glyphs = [notdef];
 
   for (const ch of Object.keys(GLYPHS)) {
-    const { contours, adv } = glyphContours(ch, p);
-    const advanceWidth = Math.max(80, Math.round(adv * p.width + p.weight * 0.2));
+    const { contours, adv } = glyphContours(ch, p, serifFont);
+    const advanceWidth = Math.max(
+      80,
+      Math.round(adv * p.width + (isSerif ? 0 : p.weight * 0.2))
+    );
     glyphs.push(
       new Glyph({
         name: glyphName(ch),

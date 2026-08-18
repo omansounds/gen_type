@@ -2,11 +2,28 @@
 // for the heavy presets. Only the most recent job matters, so the main thread
 // coalesces; here we just build and post the OTF bytes back (transferable).
 import { buildFont } from './engine/buildFont.js';
+import { parseSerif } from './engine/serif.js';
 
-self.onmessage = (e) => {
+// Bundled serif bases (Vite turns these into asset URLs, fetched on demand).
+import PlayfairUrl from './fonts/Playfair.ttf?url';
+import CormorantUrl from './fonts/Cormorant.ttf?url';
+import GaramondUrl from './fonts/Garamond.ttf?url';
+const URLS = { Playfair: PlayfairUrl, Cormorant: CormorantUrl, Garamond: GaramondUrl };
+const cache = {};
+
+async function getSerif(base) {
+  if (!base || base === 'skeleton') return null;
+  if (cache[base]) return cache[base];
+  const res = await fetch(URLS[base]);
+  cache[base] = parseSerif(await res.arrayBuffer());
+  return cache[base];
+}
+
+self.onmessage = async (e) => {
   const { id, params, meta } = e.data;
   try {
-    const font = buildFont(params, meta);
+    const serif = await getSerif(params.base);
+    const font = buildFont(params, meta, serif);
     const buf = font.toArrayBuffer();
     self.postMessage({ id, buf }, [buf]);
   } catch (err) {
