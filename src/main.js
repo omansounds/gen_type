@@ -200,7 +200,9 @@ els.random.addEventListener('click', () => {
   p.slant = Math.round(rnd(-14, 14));
   if (!serifBase) p.detail = Math.round(rnd(12, 90));
   p.cap = ['round', 'butt', 'square'][Math.floor(Math.random() * 3)];
-  const tapered = !serifBase && Math.random() < 0.55;
+  // favour the sharp broad-nib pen on the skeleton base
+  if (!serifBase && Math.random() < 0.6) { p.pen = 'pen'; p.penAngle = Math.round(rnd(0, 180)); p.miter = +rnd(3, 7).toFixed(1); }
+  const tapered = !serifBase && Math.random() < 0.6;
   if (tapered) { p.taper = +rnd(0.4, 1).toFixed(2); p.taperSharp = +rnd(0.4, 2.6).toFixed(1); p.taperBias = +rnd(-0.7, 0.7).toFixed(2); p.cap = 'butt'; }
   if (Math.random() < 0.5) { p.contrast = +rnd(0.3, 0.8).toFixed(2); p.contrastAngle = [0, 0, 90][Math.floor(Math.random() * 3)]; }
   if (Math.random() < 0.5) { p.waveAmp = Math.round(rnd(20, 90)); p.waveFreq = +rnd(0.008, 0.025).toFixed(3); p.waveAxis = ['x', 'y', 'both'][Math.floor(Math.random() * 3)]; }

@@ -30,6 +30,8 @@ export function strokeCenterline(points0, weight, opt = {}) {
     taper = 0,
     taperSharp = 1.2,
     taperBias = 0,
+    nib = false,
+    nibAngle = 22,
   } = opt;
   const out = [];
   const points = dedupe(points0);
@@ -97,6 +99,36 @@ export function strokeCenterline(points0, weight, opt = {}) {
     const reduce = startAmt * (1 - ss) + endAmt * (1 - se);
     return Math.max(0.02, 1 - taper * reduce);
   };
+
+  // --- Broad-nib PEN mode -------------------------------------------------
+  // Sweep a flat nib held at a FIXED angle along the centerline. Because the
+  // offset direction is constant, the ribbon is seamless (no notches), thick/thin
+  // contrast is automatic (thin where the stroke runs along the nib), terminals
+  // are cut on the nib angle (sharp parallelograms), and corners stay razor sharp.
+  if (nib) {
+    const a = (nibAngle * Math.PI) / 180;
+    const ax = Math.cos(a);
+    const ay = Math.sin(a);
+    const hw = (i) => Math.max((weight * taperAt(i)) / 2, 0.15);
+    for (let i = 0; i < segCount; i++) {
+      const j = (i + 1) % N;
+      if (segLen[i] < 1e-6) continue;
+      const ha = hw(i);
+      const hb = hw(j);
+      out.push(
+        orient(
+          [
+            [P[i][0] + ax * ha, P[i][1] + ay * ha],
+            [P[j][0] + ax * hb, P[j][1] + ay * hb],
+            [P[j][0] - ax * hb, P[j][1] - ay * hb],
+            [P[i][0] - ax * ha, P[i][1] - ay * ha],
+          ],
+          true
+        )
+      );
+    }
+    return out;
+  }
 
   // Half width at each vertex.
   const vHW = [];

@@ -50,6 +50,9 @@ export function glyphContours(ch, p, serifFont) {
     taper: p.taper || 0,
     taperSharp: p.taperSharp || 1.2,
     taperBias: p.taperBias || 0,
+    nib: p.pen === 'pen',
+    nibAngle: p.penAngle,
+    miterLimit: p.miter || 2.8,
   };
   let contours = [];
   for (const distorted of applyEffects(def.s || [], p, ctx)) {

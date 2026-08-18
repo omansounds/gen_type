@@ -4,13 +4,16 @@
 
 export const DEFAULTS = {
   base: 'skeleton', // 'skeleton' | 'Playfair' | 'Cormorant' | 'Garamond'
-  weight: 66,
+  weight: 52,
   width: 1,
   slant: 0,
   detail: 30,
+  pen: 'contour', // 'contour' (offset) | 'pen' (broad nib — sharp angled terminals)
+  penAngle: 22,
   taper: 0,
   taperSharp: 1.2,
   taperBias: 0,
+  miter: 2.8,
   contrast: 0,
   contrastAngle: 0,
   cap: 'round',
@@ -42,12 +45,15 @@ export const SCHEMA = [
     ],
   },
   {
-    group: 'Taper & contrast',
+    group: 'Nib & edges',
     controls: [
+      { key: 'pen', label: 'Stroke model', kind: 'select', options: ['contour', 'pen'] },
+      { key: 'penAngle', label: 'Nib angle (sharp cut)', min: 0, max: 180, step: 2, unit: '°' },
       { key: 'taper', label: 'Taper (blade / sigil tips)', min: 0, max: 1, step: 0.02 },
       { key: 'taperSharp', label: 'Taper profile (spike ↔ blade)', min: 0.3, max: 3.5, step: 0.1 },
       { key: 'taperBias', label: 'Taper bias (start ↔ end)', min: -1, max: 1, step: 0.05 },
-      { key: 'contrast', label: 'Contrast', min: 0, max: 0.92, step: 0.02 },
+      { key: 'miter', label: 'Corner sharpness', min: 1.4, max: 8, step: 0.1 },
+      { key: 'contrast', label: 'Contrast (contour model)', min: 0, max: 0.92, step: 0.02 },
       { key: 'contrastAngle', label: 'Thin-stroke angle', min: 0, max: 90, step: 5, unit: '°' },
       { key: 'cap', label: 'Cap / join', kind: 'select', options: ['round', 'butt', 'square'] },
     ],
@@ -83,13 +89,18 @@ export const SCHEMA = [
 
 export const PRESETS = {
   Clean: {},
-  Sigil: { weight: 58, taper: 0.94, taperSharp: 0.6, contrast: 0.52, cap: 'butt', detail: 46 },
-  Blade: { weight: 84, taper: 0.82, taperSharp: 2.4, contrast: 0.72, cap: 'butt', detail: 28 },
-  Fang: { weight: 104, taper: 1, taperSharp: 0.5, contrast: 0.44, cap: 'butt', detail: 64, slant: 7 },
-  Occult: { weight: 52, taper: 0.88, taperSharp: 0.7, contrast: 0.5, jitterAmp: 9, rotateJitter: 5, detail: 40, cap: 'butt' },
-  Gothic: { weight: 158, taper: 0.5, taperSharp: 2, contrast: 0.8, width: 0.8, cap: 'butt', detail: 40 },
-  Thorn: { weight: 40, taper: 0.96, taperSharp: 0.45, contrast: 0.35, waveAmp: 14, waveFreq: 0.02, detail: 34, cap: 'butt' },
-  Quill: { weight: 88, taper: 0.72, taperSharp: 1.4, taperBias: 0.6, contrast: 0.6, slant: 9, cap: 'butt', detail: 26 },
+  // ---- sharp broad-nib pen looks (thin, angled, sigil / futuristic) ----
+  Sigil: { pen: 'pen', penAngle: 28, weight: 46, taper: 0.62, taperSharp: 1.1, miter: 5.5, detail: 40 },
+  Blade: { pen: 'pen', penAngle: 105, weight: 52, taper: 0.5, taperSharp: 2, miter: 6, detail: 22, slant: 4 },
+  Kimera: { pen: 'pen', penAngle: 18, weight: 34, detail: 82, slant: 11, miter: 7 },
+  Aether: { pen: 'pen', penAngle: 40, weight: 40, taper: 0.52, taperSharp: 1.6, waveAmp: 22, waveFreq: 0.012, slant: 6, detail: 18, miter: 6 },
+  Aon: { pen: 'pen', penAngle: 30, weight: 36, taper: 0.32, slant: 14, detail: 64, miter: 7 },
+  Talon: { pen: 'pen', penAngle: 128, weight: 44, taper: 0.6, taperSharp: 0.8, slant: 8, detail: 28, miter: 6 },
+  Fang: { pen: 'pen', penAngle: 15, weight: 50, taper: 0.9, taperSharp: 0.5, slant: 6, detail: 60, miter: 6.5 },
+  Occult: { pen: 'pen', penAngle: 25, weight: 40, taper: 0.72, taperSharp: 0.7, jitterAmp: 8, rotateJitter: 5, detail: 40, miter: 5 },
+  Gothic: { pen: 'pen', penAngle: 104, weight: 88, taper: 0.4, taperSharp: 1.6, width: 0.82, detail: 34, miter: 6 },
+  Thorn: { pen: 'pen', penAngle: 12, weight: 30, taper: 0.95, taperSharp: 0.45, waveAmp: 12, waveFreq: 0.02, detail: 34, miter: 6 },
+  Quill: { pen: 'pen', penAngle: 42, weight: 62, taper: 0.5, taperBias: 0.5, slant: 9, detail: 24, miter: 5 },
   // ---- serif-outline base (warped real serifs — the flowing display look) ----
   Serif: { base: 'Playfair', detail: 20 },
   Molten: { base: 'Cormorant', liquify: 132, noiseScale: 0.006, detail: 14 },
