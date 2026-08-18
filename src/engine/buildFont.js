@@ -24,6 +24,9 @@ export function glyphContours(ch, p) {
     contrastAngle: p.contrastAngle,
     cap: p.cap,
     capSteps: p.detail < 26 ? 8 : 12,
+    taper: p.taper || 0,
+    taperSharp: p.taperSharp || 1.2,
+    taperBias: p.taperBias || 0,
   };
 
   let contours = [];

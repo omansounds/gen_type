@@ -176,13 +176,15 @@ els.random.addEventListener('click', () => {
   p.width = +rnd(0.7, 1.5).toFixed(2);
   p.slant = Math.round(rnd(-14, 14));
   p.detail = Math.round(rnd(12, 90));
-  if (Math.random() < 0.5) { p.waveAmp = Math.round(rnd(20, 90)); p.waveFreq = +rnd(0.008, 0.025).toFixed(3); p.waveAxis = ['x', 'y', 'both'][Math.floor(Math.random() * 3)]; }
-  if (Math.random() < 0.5) { p.noiseAmp = Math.round(rnd(15, 70)); p.noiseScale = +rnd(0.004, 0.014).toFixed(3); }
-  if (Math.random() < 0.4) p.jitterAmp = Math.round(rnd(10, 45));
-  if (Math.random() < 0.3) p.pixel = Math.round(rnd(20, 80));
-  if (Math.random() < 0.3) { p.echo = Math.floor(rnd(2, 5)); p.echoX = Math.round(rnd(-40, 40)); p.echoY = Math.round(rnd(-40, 40)); }
-  if (Math.random() < 0.25) p.contrast = +rnd(0.3, 0.8).toFixed(2);
   p.cap = ['round', 'butt', 'square'][Math.floor(Math.random() * 3)];
+  const tapered = Math.random() < 0.55;
+  if (tapered) { p.taper = +rnd(0.4, 1).toFixed(2); p.taperSharp = +rnd(0.4, 2.6).toFixed(1); p.taperBias = +rnd(-0.7, 0.7).toFixed(2); p.cap = 'butt'; }
+  if (Math.random() < 0.5) { p.contrast = +rnd(0.3, 0.8).toFixed(2); p.contrastAngle = [0, 0, 90][Math.floor(Math.random() * 3)]; }
+  if (Math.random() < 0.5) { p.waveAmp = Math.round(rnd(20, 90)); p.waveFreq = +rnd(0.008, 0.025).toFixed(3); p.waveAxis = ['x', 'y', 'both'][Math.floor(Math.random() * 3)]; }
+  if (Math.random() < 0.45) { p.noiseAmp = Math.round(rnd(15, 70)); p.noiseScale = +rnd(0.004, 0.014).toFixed(3); }
+  if (Math.random() < 0.4) p.jitterAmp = Math.round(rnd(10, 45));
+  if (!tapered && Math.random() < 0.3) p.pixel = Math.round(rnd(20, 80));
+  if (Math.random() < 0.3) { p.echo = Math.floor(rnd(2, 5)); p.echoX = Math.round(rnd(-40, 40)); p.echoY = Math.round(rnd(-40, 40)); }
   p.seed = Math.floor(Math.random() * 9999);
   state.params = p;
   syncControls(p);

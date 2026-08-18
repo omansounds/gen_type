@@ -7,6 +7,9 @@ export const DEFAULTS = {
   width: 1,
   slant: 0,
   detail: 30,
+  taper: 0,
+  taperSharp: 1.2,
+  taperBias: 0,
   contrast: 0,
   contrastAngle: 0,
   cap: 'round',
@@ -37,8 +40,11 @@ export const SCHEMA = [
     ],
   },
   {
-    group: 'Contrast',
+    group: 'Taper & contrast',
     controls: [
+      { key: 'taper', label: 'Taper (blade / sigil tips)', min: 0, max: 1, step: 0.02 },
+      { key: 'taperSharp', label: 'Taper profile (spike ↔ blade)', min: 0.3, max: 3.5, step: 0.1 },
+      { key: 'taperBias', label: 'Taper bias (start ↔ end)', min: -1, max: 1, step: 0.05 },
       { key: 'contrast', label: 'Contrast', min: 0, max: 0.92, step: 0.02 },
       { key: 'contrastAngle', label: 'Thin-stroke angle', min: 0, max: 90, step: 5, unit: '°' },
       { key: 'cap', label: 'Cap / join', kind: 'select', options: ['round', 'butt', 'square'] },
@@ -74,6 +80,13 @@ export const SCHEMA = [
 
 export const PRESETS = {
   Clean: {},
+  Sigil: { weight: 58, taper: 0.94, taperSharp: 0.6, contrast: 0.52, cap: 'butt', detail: 46 },
+  Blade: { weight: 84, taper: 0.82, taperSharp: 2.4, contrast: 0.72, cap: 'butt', detail: 28 },
+  Fang: { weight: 104, taper: 1, taperSharp: 0.5, contrast: 0.44, cap: 'butt', detail: 64, slant: 7 },
+  Occult: { weight: 52, taper: 0.88, taperSharp: 0.7, contrast: 0.5, jitterAmp: 9, rotateJitter: 5, detail: 40, cap: 'butt' },
+  Gothic: { weight: 158, taper: 0.5, taperSharp: 2, contrast: 0.8, width: 0.8, cap: 'butt', detail: 40 },
+  Thorn: { weight: 40, taper: 0.96, taperSharp: 0.45, contrast: 0.35, waveAmp: 14, waveFreq: 0.02, detail: 34, cap: 'butt' },
+  Quill: { weight: 88, taper: 0.72, taperSharp: 1.4, taperBias: 0.6, contrast: 0.6, slant: 9, cap: 'butt', detail: 26 },
   Liquid: { weight: 92, waveAmp: 46, waveFreq: 0.014, waveAxis: 'both', noiseAmp: 30, noiseScale: 0.006, detail: 18 },
   Wave: { weight: 54, waveAmp: 74, waveFreq: 0.02, waveAxis: 'x', detail: 16 },
   Melt: { weight: 84, waveAmp: 32, waveAxis: 'y', waveFreq: 0.02, noiseAmp: 44, noiseScale: 0.012, detail: 16 },
