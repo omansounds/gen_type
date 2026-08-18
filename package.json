@@ -1,0 +1,19 @@
+{
+  "name": "gen-type",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Generative type foundry — design experimental typefaces in the browser and export installable OTF font files.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:font": "node scripts/validate-font.mjs"
+  },
+  "dependencies": {
+    "opentype.js": "^2.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}

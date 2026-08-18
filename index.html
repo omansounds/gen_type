@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gen·Type — Generative Type Foundry</title>
+    <meta
+      name="description"
+      content="Design experimental typefaces in the browser and export installable OTF font files." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet" />
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <div class="brand">
+          <h1>Gen<b>·</b>Type</h1>
+          <span class="tag">generative type foundry</span>
+        </div>
+        <div class="spacer"></div>
+        <span class="pill" id="pill-glyphs"><b>—</b> glyphs</span>
+        <span class="pill" id="pill-size"><b>—</b> KB</span>
+        <button class="btn ghost" id="btn-random" title="New random seed">⟳ Randomize</button>
+        <button class="btn primary" id="btn-export" disabled>↓ Export OTF</button>
+      </header>
+
+      <main>
+        <aside class="panel" id="panel">
+          <div class="section">
+            <h2>Presets</h2>
+            <div class="presets" id="presets"></div>
+          </div>
+          <div class="section">
+            <h2>Font identity</h2>
+            <div class="field">
+              <label>Family name</label>
+              <input class="textin" id="familyName" value="Gen Type" spellcheck="false" />
+            </div>
+            <div class="field">
+              <label>Style name</label>
+              <input class="textin" id="styleName" value="Regular" spellcheck="false" />
+            </div>
+            <p class="hint">These names are baked into the OTF, so the font installs and shows up under this name in your apps.</p>
+          </div>
+          <div id="controls"></div>
+        </aside>
+
+        <section class="stage">
+          <div class="stage-bar">
+            <div class="tabs" id="tabs">
+              <div class="tab active" data-view="specimen">Specimen</div>
+              <div class="tab" data-view="glyphs">Glyph set</div>
+            </div>
+            <div class="grow">
+              <input class="samplein" id="sampleText" value="Experimental type, made generative." spellcheck="false" />
+            </div>
+            <div class="sizectl">
+              <span>Size</span>
+              <input type="range" id="sizeRange" min="28" max="260" step="1" value="120" />
+              <span id="sizeVal">120px</span>
+            </div>
+            <div class="swatches" id="swatches">
+              <div class="sw active" data-theme="dark" style="background:#0d0d10"></div>
+              <div class="sw" data-theme="light" style="background:#f2f1ee"></div>
+            </div>
+          </div>
+
+          <div class="canvas-wrap" id="canvasWrap">
+            <div class="specimen dark" id="specimen" contenteditable="true" spellcheck="false"></div>
+            <div class="glyphset dark" id="glyphset" style="display:none"></div>
+          </div>
+          <div class="status" id="status">building…</div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
