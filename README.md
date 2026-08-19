@@ -24,7 +24,11 @@ faces of studios like [h-4.digital](https://h-4.digital/product-category/fonts/)
     Italic** (calligraphic) — whose actual outlines are warped. **Liquifying a
     high-contrast or italic serif** gives the thin, flowing, abstract
     calligraphic display look of studios like
-    [h-4.digital](https://h-4.digital/product-category/fonts/).
+    [h-4.digital](https://h-4.digital/product-category/fonts/); and
+  - **your own font** — click **Load your own font** (or drag a `.ttf`/`.otf`
+    onto the page) to use any face you have as the base, then bend it with the
+    same Liquify / Wave / Warp controls. Nothing is uploaded — it's read and
+    warped entirely in your browser.
 - **Live preview = the exported file.** The on-screen specimen is rendered with
   the exact `@font-face` you download — no surprises after installing.
 - **Parametric & experimental controls:** weight, width, slant, a **broad-nib

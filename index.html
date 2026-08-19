@@ -32,7 +32,11 @@
           <div class="section">
             <h2>Base letterforms</h2>
             <div class="presets" id="bases"></div>
-            <p class="hint">Skeleton is the built-in monoline — set <b>Stroke model → pen</b> for sharp, angled, calligraphic terminals. The serifs are real open-source faces (SIL OFL) — warp them with <b>Liquify</b> / Wave for flowing display type. Nib, weight, taper, contrast &amp; cap apply to the Skeleton base only.</p>
+            <label class="btn ghost" id="loadFontBtn" style="margin-top:10px;width:100%;font-size:12px;padding:9px 12px;cursor:pointer">
+              ＋ Load your own font (.ttf / .otf)
+              <input type="file" id="fontFile" accept=".ttf,.otf,font/ttf,font/otf" hidden />
+            </label>
+            <p class="hint"><b>Skeleton</b> is drawn in code (not a font) — set <b>Stroke model → pen</b> for sharp, angled terminals; nib, weight, taper, contrast &amp; cap apply to it. The serifs are real open-source faces (SIL OFL). <b>Load your own font</b> to warp any .ttf/.otf you have (or drag one onto the page) — then bend it with <b>Liquify</b> / Wave.</p>
           </div>
           <div class="section">
             <h2>Presets</h2>

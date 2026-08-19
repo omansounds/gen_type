@@ -31,6 +31,19 @@ function requestBuild() {
 }
 
 worker.onmessage = (e) => {
+  // Reply from registering a user-loaded font.
+  if (e.data.type === 'font-loaded') {
+    if (e.data.ok) {
+      addOrUpdateCustomBase(e.data.name);
+      state.params.base = 'Custom';
+      setActiveBase('Custom');
+      requestBuild();
+    } else {
+      setStatus('font error');
+      alert("Couldn't read that font file.\n" + (e.data.error || '') + '\n\nTry a .ttf or .otf (not .woff/.woff2).');
+    }
+    return;
+  }
   const { id, buf, error } = e.data;
   building = false;
   if (error) { setStatus('build error'); console.error(error); }
@@ -136,6 +149,46 @@ function setActiveBase(val) {
   basesEl.querySelectorAll('.preset').forEach((el) => el.classList.toggle('active', el.dataset.base === val));
 }
 setActiveBase('skeleton');
+
+// user-loaded custom font base
+function addOrUpdateCustomBase(name) {
+  let chip = basesEl.querySelector('.preset[data-base="Custom"]');
+  if (!chip) {
+    chip = document.createElement('button');
+    chip.className = 'preset';
+    chip.dataset.base = 'Custom';
+    chip.addEventListener('click', () => { state.params.base = 'Custom'; setActiveBase('Custom'); requestBuild(); });
+    basesEl.appendChild(chip);
+  }
+  const label = name && name.length > 16 ? name.slice(0, 15) + '…' : name || 'Custom';
+  chip.textContent = '★ ' + label;
+  chip.title = 'Your font: ' + (name || 'Custom');
+}
+
+function handleFontFile(file) {
+  if (!file) return;
+  if (!/\.(ttf|otf)$/i.test(file.name)) {
+    alert('Please choose a .ttf or .otf font file (web fonts .woff/.woff2 are not supported).');
+    return;
+  }
+  setStatus('reading font…');
+  const reader = new FileReader();
+  reader.onload = () => worker.postMessage({ type: 'font', buf: reader.result }, [reader.result]);
+  reader.onerror = () => setStatus('font read error');
+  reader.readAsArrayBuffer(file);
+}
+
+document.getElementById('fontFile').addEventListener('change', (e) => {
+  handleFontFile(e.target.files[0]);
+  e.target.value = ''; // allow re-loading the same file
+});
+// drag & drop a font anywhere on the page
+window.addEventListener('dragover', (e) => { e.preventDefault(); });
+window.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) handleFontFile(f);
+});
 
 // glyph grid
 const gridChars = Object.keys(GLYPHS).filter((c) => c !== ' ');
