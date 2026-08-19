@@ -47,16 +47,31 @@ faces of studios like [h-4.digital](https://h-4.digital/product-category/fonts/)
 
 ## Run it
 
+Requires **Node.js 18+** ([nodejs.org](https://nodejs.org)). From the repo folder:
+
 ```bash
 npm install
-npm run dev        # start the dev server (Vite)
-npm run build      # production build to dist/
-npm run preview    # preview the production build
+npm run dev        # start the dev server, then open the URL it prints
+```
+
+`npm run dev` prints something like `Local: http://localhost:5173/` — open that
+in your browser. That's the way to develop/test it.
+
+Other scripts:
+
+```bash
+npm run build      # production build → dist/ (a fully static, bundled site)
+npm run preview    # serve the production build locally
 npm run test:font  # headless sanity check: build every preset and re-parse the OTF
 ```
 
-Then open the URL Vite prints. The `dist/` build is a static site — deploy it
-to GitHub Pages, Netlify, Vercel, or any static host (asset paths are relative).
+> **⚠️ A plain static server (e.g. `python -m http.server`) on the repo root will
+> show an *unstyled, non-working* page.** The source uses ES-module imports, a Web
+> Worker, and bundled font assets that must be processed by Vite first — a plain
+> file server just serves the raw source. Use `npm run dev`, **or** build first and
+> serve the output: `npm run build` then `python -m http.server 8000 -d dist`
+> (the `dist/` folder *is* a plain static site and works with any server/host —
+> GitHub Pages, Netlify, Vercel…).
 
 ## Installing an exported font
 
