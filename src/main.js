@@ -30,7 +30,34 @@ function requestBuild() {
   worker.postMessage(job);
 }
 
+function downloadFont(data) {
+  const blob = new Blob([data], { type: 'font/otf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safe = (s) => s.replace(/[^a-z0-9]+/gi, '') || 'Font';
+  a.href = url;
+  a.download = `${safe(state.family)}-${safe(state.style)}.otf`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 worker.onmessage = (e) => {
+  // Clean-export result.
+  if (e.data.type === 'export-ready') {
+    downloadFont(e.data.buf);
+    els.export.disabled = false;
+    setStatus('ready');
+    return;
+  }
+  if (e.data.type === 'export-error') {
+    console.error(e.data.error);
+    if (latestBytes) downloadFont(latestBytes); // fall back to the un-merged build
+    els.export.disabled = false;
+    setStatus('ready');
+    return;
+  }
   // Reply from registering a user-loaded font.
   if (e.data.type === 'font-loaded') {
     if (e.data.ok) {
@@ -274,19 +301,16 @@ els.random.addEventListener('click', () => {
   requestBuild();
 });
 
-// export
+// export — build a clean, validator-safe font (overlaps merged) off-thread
 els.export.addEventListener('click', () => {
   if (!latestBytes) return;
-  const blob = new Blob([latestBytes], { type: 'font/otf' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  const safe = (s) => s.replace(/[^a-z0-9]+/gi, '') || 'Font';
-  a.href = url;
-  a.download = `${safe(state.family)}-${safe(state.style)}.otf`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  setStatus('cleaning outlines…');
+  els.export.disabled = true;
+  worker.postMessage({
+    type: 'export',
+    params: { ...state.params },
+    meta: { family: state.family, style: state.style },
+  });
 });
 
 // ---- boot ---------------------------------------------------------------

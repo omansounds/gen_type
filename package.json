@@ -11,7 +11,8 @@
     "test:font": "node scripts/validate-font.mjs"
   },
   "dependencies": {
-    "opentype.js": "^2.0.0"
+    "opentype.js": "^2.0.0",
+    "polygon-clipping": "^0.15.7"
   },
   "devDependencies": {
     "vite": "^5.4.0"

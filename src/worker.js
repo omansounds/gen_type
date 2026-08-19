@@ -25,6 +25,19 @@ async function getSerif(base) {
 self.onmessage = async (e) => {
   const d = e.data;
 
+  // Clean export: merge overlaps into validator-safe outlines.
+  if (d.type === 'export') {
+    try {
+      const serif = await getSerif(d.params.base);
+      const font = buildFont(d.params, { ...d.meta, clean: true }, serif);
+      const buf = font.toArrayBuffer();
+      self.postMessage({ type: 'export-ready', buf }, [buf]);
+    } catch (err) {
+      self.postMessage({ type: 'export-error', error: String((err && err.message) || err) });
+    }
+    return;
+  }
+
   // Register a user-supplied font as the 'Custom' base.
   if (d.type === 'font') {
     try {

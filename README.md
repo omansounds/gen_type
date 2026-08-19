@@ -49,7 +49,11 @@ faces of studios like [h-4.digital](https://h-4.digital/product-category/fonts/)
 - **Custom naming** — the family & style names you type are baked into the OTF
   name table, so the font installs and appears under that name in your apps.
 - **One-click OTF export**, generated entirely in the browser (no server, no
-  upload).
+  upload). Export **merges the overlapping stroke pieces into clean,
+  non-self-intersecting outlines** (boolean union) — so the font passes
+  validators (FontForge etc.), edits cleanly, and is roughly half the size.
+  (An existing gen_type OTF can be cleaned with `node scripts/clean-otf.mjs
+  in.otf`.)
 
 ## Run it
 

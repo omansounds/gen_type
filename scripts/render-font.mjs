@@ -14,7 +14,8 @@ if (params.base && params.base !== 'skeleton') {
   const buf = fs.readFileSync(new URL(`../src/fonts/${params.base}.ttf`, import.meta.url));
   serif = parseSerif(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength));
 }
-const font = buildFont(params, { family: 'GenTypeTest', style: 'Regular' }, serif);
+const clean = process.argv.includes('--clean');
+const font = buildFont(params, { family: 'GenTypeTest', style: 'Regular', clean }, serif);
 const b64 = Buffer.from(new Uint8Array(font.toArrayBuffer())).toString('base64');
 
 const html = `<!doctype html><html><head><style>

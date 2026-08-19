@@ -10,6 +10,7 @@ import { GLYPHS, METRICS, unicodeFor } from './glyphs.js';
 import { applyEffects, addSwashes } from './effects.js';
 import { strokeCenterline } from './stroke.js';
 import { serifContours } from './serif.js';
+import { cleanContours } from './clean.js';
 import { orient } from './geometry.js';
 
 // Echo / ghost: repeat the whole outline at an offset (translation keeps winding).
@@ -80,11 +81,14 @@ export function buildFont(params, meta = {}, serifFont = null) {
   const style = meta.style || 'Regular';
   const isSerif = p.base && p.base !== 'skeleton' && serifFont;
 
+  const clean = !!meta.clean; // merge overlaps for a validator-clean export
   const notdef = new Glyph({ name: '.notdef', unicode: 0, advanceWidth: 400, path: new Path() });
   const glyphs = [notdef];
 
   for (const ch of Object.keys(GLYPHS)) {
-    const { contours, adv } = glyphContours(ch, p, serifFont);
+    const g = glyphContours(ch, p, serifFont);
+    const adv = g.adv;
+    const contours = clean ? cleanContours(g.contours) : g.contours;
     const advanceWidth = Math.max(
       80,
       Math.round(adv * p.width + (isSerif ? 0 : p.weight * 0.2))
