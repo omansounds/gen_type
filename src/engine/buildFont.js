@@ -7,7 +7,7 @@
 // identically under Node (scripts) and Vite/Rollup (the browser bundle).
 import { Font, Glyph, Path } from 'opentype.js/dist/opentype.mjs';
 import { GLYPHS, METRICS, unicodeFor } from './glyphs.js';
-import { applyEffects } from './effects.js';
+import { applyEffects, addSwashes } from './effects.js';
 import { strokeCenterline } from './stroke.js';
 import { serifContours } from './serif.js';
 import { orient } from './geometry.js';
@@ -55,7 +55,8 @@ export function glyphContours(ch, p, serifFont) {
     miterLimit: p.miter || 2.8,
   };
   let contours = [];
-  for (const distorted of applyEffects(def.s || [], p, ctx)) {
+  const baseStrokes = p.swash > 0 ? addSwashes(def.s || [], p, ctx) : def.s || [];
+  for (const distorted of applyEffects(baseStrokes, p, ctx)) {
     for (const c of strokeCenterline(distorted, p.weight, strokeOpt)) contours.push(c);
   }
   if (def.f) for (const poly of applyEffects(def.f, p, ctx)) contours.push(orient(poly, true));

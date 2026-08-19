@@ -35,7 +35,9 @@ faces of studios like [h-4.digital](https://h-4.digital/product-category/fonts/)
   pen** model (sharp angled terminals, automatic thick/thin, razor corners — the
   sleek/sigil/futuristic look), adjustable **corner sharpness**,
   **stroke taper** (blade / sigil tips, with spike↔blade profile and a
-  start↔end bias for calligraphic entry/exit strokes), stroke **contrast**
+  start↔end bias for calligraphic entry/exit strokes), **swashes** that grow
+  long curling tails off the letters' free terminals (flowing, abstract
+  extensions), stroke **contrast**
   (including reverse contrast), facet/smoothness, sine **waves**, flowing
   **noise warp**, **jitter/roughen**, **pixelate**, per-glyph **rotation**,
   and **echo/ghost** repeats — all seeded for reproducibility.

@@ -13,6 +13,9 @@ export const DEFAULTS = {
   taper: 0,
   taperSharp: 1.2,
   taperBias: 0,
+  swash: 0,
+  swashLength: 240,
+  swashCurl: 12,
   miter: 2.8,
   contrast: 0,
   contrastAngle: 0,
@@ -59,6 +62,14 @@ export const SCHEMA = [
     ],
   },
   {
+    group: 'Swashes (Skeleton base)',
+    controls: [
+      { key: 'swash', label: 'Swash amount', min: 0, max: 1, step: 0.05 },
+      { key: 'swashLength', label: 'Swash length', min: 0, max: 620, step: 10 },
+      { key: 'swashCurl', label: 'Swash sweep', min: 0, max: 200, step: 5, unit: '°' },
+    ],
+  },
+  {
     group: 'Distortion',
     controls: [
       { key: 'liquify', label: 'Liquify (melt / flow)', min: 0, max: 240, step: 1 },
@@ -93,7 +104,8 @@ export const PRESETS = {
   Sigil: { pen: 'pen', penAngle: 28, weight: 46, taper: 0.62, taperSharp: 1.1, miter: 5.5, detail: 40 },
   Blade: { pen: 'pen', penAngle: 105, weight: 52, taper: 0.5, taperSharp: 2, miter: 6, detail: 22, slant: 4 },
   Kimera: { pen: 'pen', penAngle: 18, weight: 34, detail: 82, slant: 11, miter: 7 },
-  Aether: { pen: 'pen', penAngle: 40, weight: 40, taper: 0.52, taperSharp: 1.6, waveAmp: 22, waveFreq: 0.012, slant: 6, detail: 18, miter: 6 },
+  Aether: { pen: 'pen', penAngle: 40, weight: 40, taper: 0.55, taperSharp: 1.5, swash: 0.85, swashLength: 380, swashCurl: 70, waveAmp: 14, waveFreq: 0.012, slant: 8, detail: 16, miter: 6 },
+  Spectre: { pen: 'pen', penAngle: 30, weight: 36, taper: 0.62, taperSharp: 0.9, swash: 0.9, swashLength: 520, swashCurl: 95, slant: 11, detail: 16, miter: 6 },
   Aon: { pen: 'pen', penAngle: 30, weight: 36, taper: 0.32, slant: 14, detail: 64, miter: 7 },
   Talon: { pen: 'pen', penAngle: 128, weight: 44, taper: 0.6, taperSharp: 0.8, slant: 8, detail: 28, miter: 6 },
   Fang: { pen: 'pen', penAngle: 15, weight: 50, taper: 0.9, taperSharp: 0.5, slant: 6, detail: 60, miter: 6.5 },

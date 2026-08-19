@@ -59,6 +59,62 @@ export function glyphSeed(globalSeed, code) {
   return (Math.imul(globalSeed >>> 0, 2654435761) ^ Math.imul(code, 40503)) >>> 0;
 }
 
+// Grow long, curling, tapering tails off the FREE terminals of a letter — the
+// swashes/extensions that give experimental display faces their flowing,
+// abstract, alien quality. A terminal is "free" if no other stroke sits near it
+// (so tails fly off the outer ends of arms/tails, not out of interior joins).
+export function addSwashes(strokes, p, ctx) {
+  if (!p.swash || p.swash <= 0) return strokes;
+  const rng = mulberry32(glyphSeed((p.seed | 0) + 1337, ctx.code));
+  const thr2 = 62 * 62;
+  const isFree = (tip, own, ownIdx) => {
+    for (const s of strokes) {
+      for (let i = 0; i < s.length; i++) {
+        if (s === own && Math.abs(i - ownIdx) <= 1) continue;
+        const dx = s[i][0] - tip[0];
+        const dy = s[i][1] - tip[1];
+        if (dx * dx + dy * dy < thr2) return false;
+      }
+    }
+    return true;
+  };
+  const extend = (poly, side) => {
+    const n = poly.length;
+    const tip = side > 0 ? poly[n - 1] : poly[0];
+    const prev = side > 0 ? poly[n - 2] : poly[1];
+    let ang = Math.atan2(tip[1] - prev[1], tip[0] - prev[0]);
+    const len = p.swashLength * (0.6 + rng() * 0.8);
+    const steps = 16;
+    const step = len / steps;
+    // swashCurl is the TOTAL sweep of the tail (deg), spread evenly → an open
+    // arc, not a spiral. Random sign so tails fan both ways.
+    const perStep = (rad(p.swashCurl) / steps) * (rng() < 0.5 ? -1 : 1);
+    const pts = [];
+    let cx = tip[0];
+    let cy = tip[1];
+    for (let k = 0; k < steps; k++) {
+      ang += perStep;
+      cx += Math.cos(ang) * step;
+      cy += Math.sin(ang) * step;
+      pts.push([cx, cy]);
+    }
+    return side > 0 ? poly.concat(pts) : pts.reverse().concat(poly);
+  };
+  const out = [];
+  for (const s of strokes) {
+    if (s.length < 2) { out.push(s); continue; }
+    const closed =
+      Math.abs(s[0][0] - s[s.length - 1][0]) < 1e-6 && Math.abs(s[0][1] - s[s.length - 1][1]) < 1e-6;
+    let ns = s;
+    if (!closed) {
+      if (isFree(s[s.length - 1], s, s.length - 1) && rng() < p.swash) ns = extend(ns, 1);
+      if (isFree(s[0], s, 0) && rng() < p.swash) ns = extend(ns, -1);
+    }
+    out.push(ns);
+  }
+  return out;
+}
+
 // Apply the full distortion stack to one glyph's strokes.
 // ctx: { adv, code, cx, cy }  — cx/cy is the glyph centre used for width/rotate.
 export function applyEffects(strokes, p, ctx) {
